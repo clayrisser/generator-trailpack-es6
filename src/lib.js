@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import emptyDir from 'empty-dir';
 import gitUserEmail from 'git-user-email';
 import gitUserName from 'git-user-name';
@@ -31,47 +32,39 @@ export function copy(yo) {
     yo.fs.copyTpl(
       yo.templatePath('template/shared/_package.json'),
       yo.destinationPath('package.json'),
-      ...yo.context
+      { ...yo.context }
     ),
     yo.fs.copyTpl(
       yo.templatePath('template/shared/LICENSE'),
       yo.destinationPath('LICENSE'),
-      ...yo.context
+      { ...yo.context }
     ),
     yo.fs.copyTpl(
       yo.templatePath('template/shared/README.md'),
       yo.destinationPath('README.md'),
-      ...yo.context
+      { ...yo.context }
     ),
-    yo.fs.copyTpl(
+    yo.fs.copy(
       yo.templatePath('template/shared/_editorconfig'),
-      yo.destinationPath('.editorconfig'),
-      ...yo.context
+      yo.destinationPath('.editorconfig')
     ),
-    yo.fs.copyTpl(
+    yo.fs.copy(
       yo.templatePath('template/shared/_gitignore'),
-      yo.destinationPath('.gitignore'),
-      ...yo.context
+      yo.destinationPath('.gitignore')
     ),
-    yo.fs.copyTpl(
-      yo.templatePath('template/shared/nwb.config.js'),
-      yo.destinationPath('nwb.config.js'),
-      ...yo.context
+    yo.fs.copy(
+      yo.templatePath('template/shared/_prettierrc'),
+      yo.destinationPath('.prettierrc')
     ),
     yo.fs.copyTpl(
       yo.templatePath('template/shared/src/**'),
       yo.destinationPath('src'),
-      ...yo.context
+      { ...yo.context }
     ),
     yo.fs.copyTpl(
-      yo.templatePath('template/shared/tests/_eslintrc'),
-      yo.destinationPath('tests/.eslintrc'),
-      ...yo.context
-    ),
-    yo.fs.copyTpl(
-      yo.templatePath('template/shared/tests/index-test.js'),
-      yo.destinationPath('tests/index-test.js'),
-      ...yo.context
+      yo.templatePath('template/shared/_eslintrc'),
+      yo.destinationPath('.eslintrc'),
+      { ...yo.context }
     )
   ]);
 }

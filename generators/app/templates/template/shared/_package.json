@@ -1,0 +1,54 @@
+{
+  "name": "trailpack-<%= name %>",
+  "version": "<%= version %>",
+  "description": "<%= description %>",
+  "homepage": "<%= homepage %>",
+  "author": {
+    "name": "<%= authorName %>",
+    "email": "<%= authorEmail %>",
+    "url": "<%= authorUrl %>"
+  },
+  "main": "lib/index.js",
+  "files": ["lib"],
+  "scripts": {
+    "lint": "eslint ./",
+    "lint:fix": "eslint --fix ./",
+    "build": "npm run clean && babel src -d lib",
+    "clean": "rm -rf lib",
+    "prepublish": "npm run build"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "trailpack": "^2.1.3",
+    "trails": "^2.0.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "eslint": "^4.18.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.9.0"
+  },
+  "license": "<%= license %>",
+  "repository": "<%= repository %>",
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "6"
+          }
+        }
+      ],
+      "stage-2"
+    ]
+  },
+  "engines": {
+    "node": ">= 6.0.0"
+  },
+  "eslintIgnore": ["dist"]
+}

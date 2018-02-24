@@ -11,9 +11,10 @@ import {
   isEmpty
 } from './lib';
 
-export default class extends Generator {
+module.exports = class extends Generator {
   initializing() {
-    if (this.options.destination) this.destinationRoot(this.options.destination);
+    if (this.options.destination)
+      this.destinationRoot(this.options.destination);
     this.context = {
       moment
     };
@@ -21,7 +22,7 @@ export default class extends Generator {
   }
 
   async prompting() {
-    const { name } = await this.optionOrPrompt([
+    let { name } = await this.optionOrPrompt([
       {
         type: 'input',
         name: 'name',
@@ -29,11 +30,10 @@ export default class extends Generator {
         default: guessName()
       }
     ]);
-    const {
-      description,
-      version,
-      license
-    } = await this.optionOrPrompt([
+    if (!/^trailpack-/.test(name)) {
+      name = `trailpack-${name}`;
+    }
+    const { description, version, license } = await this.optionOrPrompt([
       {
         type: 'input',
         name: 'description',
@@ -44,7 +44,7 @@ export default class extends Generator {
         type: 'input',
         name: 'version',
         message: 'Version:',
-        default: 'v0.0.1'
+        default: '0.0.1'
       },
       {
         type: 'input',
@@ -53,10 +53,7 @@ export default class extends Generator {
         default: 'MIT'
       }
     ]);
-    const {
-      authorName,
-      authorEmail
-    } = await this.optionOrPrompt([
+    const { authorName, authorEmail } = await this.optionOrPrompt([
       {
         type: 'input',
         name: 'authorName',
@@ -70,12 +67,20 @@ export default class extends Generator {
         default: guessEmail()
       }
     ]);
+    const { githubUsername } = await this.optionOrPrompt([
+      {
+        type: 'input',
+        name: 'githubUsername',
+        message: 'GitHub Username:',
+        default: guessUsername(authorEmail)
+      }
+    ]);
     const { authorUrl } = await this.optionOrPrompt([
       {
         type: 'input',
         name: 'authorUrl',
         message: 'Author URL:',
-        default: `https://${guessUsername(authorEmail)}.com`
+        default: `https://${githubUsername}.com`
       }
     ]);
     const {
@@ -88,13 +93,13 @@ export default class extends Generator {
         type: 'input',
         name: 'homepage',
         message: 'Homepage:',
-        default: `https://github.com/${guessUsername(authorEmail)}/${name}`
+        default: `https://github.com/${githubUsername}/${name}`
       },
       {
         type: 'input',
         name: 'repository',
         message: 'Repository:',
-        default: `https://github.com/${guessUsername(authorEmail)}/${name}`
+        default: `https://github.com/${githubUsername}/${name}`
       },
       {
         type: 'list',
@@ -111,17 +116,18 @@ export default class extends Generator {
       }
     ]);
     this.answers = {
-      name,
-      description,
-      version,
-      license,
+      authorEmail,
       authorName,
       authorUrl,
-      authorEmail,
+      description,
+      githubUsername,
       homepage,
+      install,
+      license,
+      name,
       repository,
       template,
-      install
+      version
     };
     this.context = { ...this.context, ...this.answers };
   }
@@ -141,8 +147,11 @@ export default class extends Generator {
   conflicts() {}
 
   install() {
-    const install = this.options.install ? this.options.install[0].toLowerCase() : 'y';
-    if (!this.answers.install || install === 'n' || install === 'f') return false;
+    const install = this.options.install
+      ? this.options.install[0].toLowerCase()
+      : 'y';
+    if (!this.answers.install || install === 'n' || install === 'f')
+      return false;
     return this.installDependencies({
       npm: true,
       bower: false,
@@ -151,4 +160,4 @@ export default class extends Generator {
   }
 
   end() {}
-}
+};
